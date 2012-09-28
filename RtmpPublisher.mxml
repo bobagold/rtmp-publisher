@@ -20,47 +20,19 @@
 			private var stream:NetStream;
 
 			private function toggleFeedListener(event:MouseEvent):void {
-				if(toggleFeed.label == 'Start Feed') {
-					toggleFeed.label = 'Stop Feed';
+				if(toggleFeed.label == 'Record') {
+					toggleFeed.label = 'Stop';
 					stream.publish(file, 'live');
 					videoDisplay.attachCamera(camera);
-					toggleVideo.enabled = true;
-					toggleAudio.enabled = true;
 				} else {
-					toggleFeed.label = 'Start Feed';
+					toggleFeed.label = 'Record';
 					stream.close();
 					videoDisplay.attachCamera(null);
-					toggleVideo.enabled = false;
-					toggleAudio.enabled = false;
-				}
-			}
-
-			private function toggleVideoListener(event:MouseEvent):void {
-				if(toggleVideo.label == 'Start Video') {
-					toggleVideo.label = 'Stop Video';
-					videoDisplay.attachCamera(camera);
-					stream.attachCamera(camera);
-				} else {
-					toggleVideo.label = 'Start Video';
-					videoDisplay.attachCamera(null);
-					stream.attachCamera(null);
-				}
-			}
-
-			private function toggleAudioListener(event:MouseEvent):void {
-				if(toggleAudio.label == 'Start Audio') {
-					toggleAudio.label = 'Stop Audio';
-					stream.attachAudio(microphone);
-				} else {
-					toggleAudio.label = 'Start Audio';
-					stream.attachAudio(null);
 				}
 			}
 
 			private function initListeners():void {
 				toggleFeed.addEventListener(MouseEvent.CLICK, toggleFeedListener);
-				toggleVideo.addEventListener(MouseEvent.CLICK, toggleVideoListener);
-				toggleAudio.addEventListener(MouseEvent.CLICK, toggleAudioListener);
 			}
 
 			private function netStatusHander(event:NetStatusEvent):void {
@@ -92,6 +64,7 @@
 				connection.connect(streamer);
 				connection.addEventListener(NetStatusEvent.NET_STATUS, netStatusHander);
 
+				videoDisplay.attachCamera(camera);
 			}
 		]]>
 	</fx:Script>
@@ -99,10 +72,7 @@
 		<mx:VideoDisplay width="100%" height="100%" id="videoDisplay">
 		</mx:VideoDisplay>
 		<s:controlBarContent>
-			<s:Button label="Start Feed" id="toggleFeed"></s:Button>
-			<s:Spacer width="100%" height="100%"/>
-			<s:Button label="Stop Video" id="toggleVideo" enabled="false"></s:Button>
-			<s:Button label="Stop Audio" id="toggleAudio" enabled="false"></s:Button>
+			<s:Button label="Record" id="toggleFeed"></s:Button>
 		</s:controlBarContent>
 	</s:Panel>
 </s:Application>
