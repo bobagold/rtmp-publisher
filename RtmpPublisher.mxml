@@ -25,11 +25,24 @@
 					stream.publish(file, 'live');
 					videoDisplay.attachCamera(camera);
 				} else {
+                    callWrapper();
 					toggleFeed.label = 'Record';
 					stream.close();
 					videoDisplay.attachCamera(null);
 				}
 			}
+
+
+            public function callWrapper():void {
+                var s:String;
+                if (ExternalInterface.available) {
+                   var wrapperFunction:String = "stopRecord";
+                   s = ExternalInterface.call(wrapperFunction,"ok");
+                } else {
+                   s = "Wrapper not available";
+                }
+            }
+
 
 			private function initListeners():void {
 				toggleFeed.addEventListener(MouseEvent.CLICK, toggleFeedListener);
