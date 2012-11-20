@@ -6,7 +6,8 @@
     <script type="text/javascript">
         var flashVars = {
             streamer: 'rtmp://localhost/myapp',
-            file:'mystream'
+            file:'mystream',
+            onStopRecord:'obj.stopRecord'
         };
         swfobject.embedSWF("RtmpPublisher.swf", "rtmp-publisher", "500", "400", "9.0.0", null, flashVars);
     </script>
@@ -16,10 +17,11 @@
         <p>Flash not installed</p>
     </div>
     <script type="text/javascript">
-    var stopRecord = function(ok) {
+    var stopRecord2 = function(ok) {
         console.log('ok', ok);
         return "vasya";
     }
+    var obj = { stopRecord: stopRecord2 };
     </script>
 </body>
 </html>
