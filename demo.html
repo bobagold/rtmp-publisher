@@ -5,10 +5,12 @@
     <script type="text/javascript" src="swfobject.js"></script>
     <script type="text/javascript">
         var flashVars = {
-            //streamer: 'rtmp://gift.novadoo.vps282.xiag.ch/publish',
-            streamer: 'rtmp://vgold.xiag.ch/publish',
+            streamer: 'rtmp://gift.novadoo.vps282.xiag.ch/publish',
+            //streamer: 'rtmp://vgold.xiag.ch/publish',
+            //streamer: 'rtmp://vgold.xiag.ch/oflaDemo',
             file:'mystream',
-            onStopRecord:'obj.stopRecord'
+            onStopRecord:'obj.stopRecord',
+            publishType: 'record'
         };
         swfobject.embedSWF("RtmpPublisher.swf", "rtmp-publisher", "500", "400", "9.0.0", null, flashVars);
     </script>

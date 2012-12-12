@@ -14,6 +14,7 @@
 			import mx.core.FlexGlobals;
 			private var streamer:String;
 			private var file:String;
+			private var publishType:String;
 			private var onStopRecord:String;
 			private var camera:Camera;
 			private var microphone:Microphone;
@@ -24,7 +25,7 @@
 			private function toggleFeedListener(event:MouseEvent):void {
 				if(toggleFeed.label == 'Record') {
 					toggleFeed.label = 'Stop';
-					stream.publish(file, 'live');
+					stream.publish(file, publishType);
 					videoDisplay.attachCamera(camera);
 				} else {
                     callWrapper();
@@ -58,12 +59,10 @@
 						stream.attachAudio(microphone);
 						h264Settings = new H264VideoStreamSettings();
 						h264Settings.setProfileLevel(H264Profile.BASELINE, H264Level.LEVEL_1_2);
+						h264Settings.setKeyFrameInterval(1);
 						stream.videoStreamSettings = h264Settings;
-						stream.dataReliable = true;
-						stream.bufferTimeMax = 0;
-						stream.bufferTime = 0;
-						stream.videoReliable = true;
-						stream.audioReliable = true;
+						stream.bufferTimeMax = 30;
+						stream.bufferTime = 10;
 						break;
 				}
 			}
@@ -71,6 +70,7 @@
 			private function init():void {
 				streamer = FlexGlobals.topLevelApplication.parameters.streamer;
 				file = FlexGlobals.topLevelApplication.parameters.file;
+				publishType = FlexGlobals.topLevelApplication.parameters.publishType;
                 onStopRecord = FlexGlobals.topLevelApplication.parameters.onStopRecord;
 				if(file == null) {
 					Alert.show('Missing flashvars: file');
@@ -80,6 +80,9 @@
 					Alert.show('Missing flashvars: streamer');
 					return;
 				}
+				if(publishType == null) {
+					publishType = 'record';
+				}
 				initListeners();
 
 				camera = Camera.getCamera();
@@ -87,11 +90,9 @@
 				camera.setQuality(0, 90);
 
 				microphone = Microphone.getMicrophone();
-				microphone.setSilenceLevel(0);
-				//microphone.codec = "Speex";
-				microphone.encodeQuality = 10;
+				microphone.encodeQuality = 9;
 				microphone.rate = 44;
-				microphone.setUseEchoSuppression(true); 
+			//	microphone.framesPerPacket = 1;
 
 				connection = new NetConnection();
 				connection.connect(streamer);
