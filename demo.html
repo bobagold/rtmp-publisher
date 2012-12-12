@@ -7,7 +7,10 @@
         var flashVars = {
             streamer: 'rtmp://localhost/myapp',
             file:'mystream',
-            onStopRecord:'obj.stopRecord'
+            onStopRecord:'obj.stopRecord',
+            publishType: 'record',
+            labelRecord: 'Записать',
+            labelStop: 'Остановить запись',
         };
         swfobject.embedSWF("RtmpPublisher.swf", "rtmp-publisher", "500", "400", "9.0.0", null, flashVars);
     </script>
