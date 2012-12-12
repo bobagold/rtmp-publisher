@@ -12,10 +12,13 @@
 		<![CDATA[
 			import mx.controls.Alert;
 			import mx.core.FlexGlobals;
+			private var isRecording:Boolean;
 			private var streamer:String;
 			private var file:String;
 			private var publishType:String;
 			private var onStopRecord:String;
+			private var labelRecord:String;
+			private var labelStop:String;
 			private var camera:Camera;
 			private var microphone:Microphone;
 			private var connection:NetConnection;
@@ -23,13 +26,15 @@
 			private var h264Settings:H264VideoStreamSettings;
 
 			private function toggleFeedListener(event:MouseEvent):void {
-				if(toggleFeed.label == 'Record') {
-					toggleFeed.label = 'Stop';
+				if (!isRecording) {
+					isRecording = true;
+					toggleFeed.label = labelStop;
 					stream.publish(file, publishType);
 					videoDisplay.attachCamera(camera);
 				} else {
+					isRecording = false;
                     callWrapper();
-					toggleFeed.label = 'Record';
+					toggleFeed.label = labelRecord;
 					stream.close();
 					videoDisplay.attachCamera(null);
 				}
@@ -68,21 +73,25 @@
 			}
 
 			private function init():void {
+				isRecording = false;
 				streamer = FlexGlobals.topLevelApplication.parameters.streamer;
 				file = FlexGlobals.topLevelApplication.parameters.file;
 				publishType = FlexGlobals.topLevelApplication.parameters.publishType;
                 onStopRecord = FlexGlobals.topLevelApplication.parameters.onStopRecord;
-				if(file == null) {
+                labelRecord = FlexGlobals.topLevelApplication.parameters.labelRecord;
+                labelStop = FlexGlobals.topLevelApplication.parameters.labelStop;
+
+				if (file == null) {
 					Alert.show('Missing flashvars: file');
 					return;
 				}
-				if(streamer == null) {
+				if (streamer == null) {
 					Alert.show('Missing flashvars: streamer');
 					return;
 				}
-				if(publishType == null) {
-					publishType = 'record';
-				}
+				if (publishType == null) { publishType = 'record'; }
+				if (labelRecord == null) { labelRecord = 'Record'; }
+				if (labelStop == null) { labelStop = 'Stop'; }
 				initListeners();
 
 				camera = Camera.getCamera();
@@ -99,14 +108,11 @@
 				connection.addEventListener(NetStatusEvent.NET_STATUS, netStatusHander);
 
 				videoDisplay.attachCamera(camera);
+				toggleFeed.label = labelRecord;
 			}
 		]]>
 	</fx:Script>
-	<s:Panel x="0" y="0" width="100%" height="100%" title="RTMP Publisher">
-		<mx:VideoDisplay width="100%" height="100%" id="videoDisplay">
-		</mx:VideoDisplay>
-		<s:controlBarContent>
-			<s:Button label="Record" id="toggleFeed"></s:Button>
-		</s:controlBarContent>
-	</s:Panel>
+	<!-- TODO: Should we add layout? -->
+	<mx:VideoDisplay width="100%" height="100%" id="videoDisplay"></mx:VideoDisplay>
+	<s:Button label="Record" id="toggleFeed" right="10" bottom="10"></s:Button>
 </s:Application>

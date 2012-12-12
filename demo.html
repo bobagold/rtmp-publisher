@@ -10,7 +10,9 @@
             //streamer: 'rtmp://vgold.xiag.ch/oflaDemo',
             file:'mystream',
             onStopRecord:'obj.stopRecord',
-            publishType: 'record'
+            publishType: 'record',
+            labelRecord: 'Записать',
+            labelStop: 'Остановить запись',
         };
         swfobject.embedSWF("RtmpPublisher.swf", "rtmp-publisher", "500", "400", "9.0.0", null, flashVars);
     </script>
