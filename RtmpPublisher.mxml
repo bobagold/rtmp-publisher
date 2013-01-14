@@ -102,6 +102,7 @@
 				microphone.encodeQuality = 9;
 				microphone.rate = 44;
 			//	microphone.framesPerPacket = 1;
+                microphone.setSilenceLevel(0);
 
 				connection = new NetConnection();
 				connection.connect(streamer);
