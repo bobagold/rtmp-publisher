@@ -17,6 +17,7 @@
 			private var file:String;
 			private var publishType:String;
 			private var onStopRecord:String;
+			private var onError:String;
 			private var labelRecord:String;
 			private var labelStop:String;
 			private var camera:Camera;
@@ -51,6 +52,16 @@
                 }
             }
 
+            public function callOnError(message:String):void {
+                var s:String;
+                if (ExternalInterface.available) {
+                   var wrapperFunction:String = onError;
+                   s = ExternalInterface.call(wrapperFunction, message);
+                } else {
+                   s = "Wrapper not available";
+                }
+            }
+
 
 			private function initListeners():void {
 				toggleFeed.addEventListener(MouseEvent.CLICK, toggleFeedListener);
@@ -78,6 +89,7 @@
 				file = FlexGlobals.topLevelApplication.parameters.file;
 				publishType = FlexGlobals.topLevelApplication.parameters.publishType;
                 onStopRecord = FlexGlobals.topLevelApplication.parameters.onStopRecord;
+                onError = FlexGlobals.topLevelApplication.parameters.onError;
                 labelRecord = FlexGlobals.topLevelApplication.parameters.labelRecord;
                 labelStop = FlexGlobals.topLevelApplication.parameters.labelStop;
 
@@ -95,6 +107,12 @@
 				initListeners();
 
 				camera = Camera.getCamera();
+                if (camera == null) {
+                    callOnError("no camera");
+                    toggleFeed.label = "no camera";
+                    return;
+                }
+                camera.addEventListener(StatusEvent.STATUS, camStatusHandler);
 				camera.setMode(640, 480, 30);
 				camera.setQuality(0, 90);
 
@@ -111,6 +129,15 @@
 				videoDisplay.attachCamera(camera);
 				toggleFeed.label = labelRecord;
 			}
+
+            private function camStatusHandler(event:StatusEvent):void {
+                if (event.code == "Camera.Unmuted") {
+                }
+                if (event.code == "Camera.Muted") {
+                    callOnError("camera denied");
+                    toggleFeed.label = "camera denied";
+                }
+            }
 		]]>
 	</fx:Script>
 	<!-- TODO: Should we add layout? -->

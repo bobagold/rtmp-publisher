@@ -2,15 +2,18 @@
 <html>
 <head>
     <title>RTMP Publisher</title>
+    <meta charset='utf-8'>
+    <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
     <script type="text/javascript" src="swfobject.js"></script>
     <script type="text/javascript">
         var flashVars = {
             streamer: 'rtmp://localhost/myapp',
             file:'mystream',
-            onStopRecord:'obj.stopRecord',
+            onStopRecord:'stopRecord',
+            onError:'error',
             publishType: 'record',
             labelRecord: 'Записать',
-            labelStop: 'Остановить запись',
+            labelStop: 'Остановить запись'
         };
         swfobject.embedSWF("RtmpPublisher.swf", "rtmp-publisher", "500", "400", "9.0.0", null, flashVars);
     </script>
@@ -20,11 +23,14 @@
         <p>Flash not installed</p>
     </div>
     <script type="text/javascript">
-    var stopRecord2 = function(ok) {
+    var stopRecord = function(ok) {
         console.log('ok', ok);
         return "vasya";
     }
-    var obj = { stopRecord: stopRecord2 };
+    var error = function(ok) {
+        console.log('err', ok);
+        return "kolya";
+    }
     </script>
 </body>
 </html>
